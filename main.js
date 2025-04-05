@@ -97,11 +97,59 @@ async function handleMessages(sock, messageUpdate, printLog) {
 
         const message = messages[0];
         if (!message?.message) return;
+        // Auto react with a random emoji
+try {
+    const emojis = ["💯", "🚀", "💞", "🤣", "👹", "🥷"];
+    const emojiToReact = emojis[Math.floor(Math.random() * emojis.length)];
 
+    await sock.sendMessage(chatId, {
+        react: {
+            text: emojiToReact,
+            key: message.key
+        }
+    });
+} catch (e) {
+    console.error("Failed to react to message:", e);
+}
         const chatId = message.key.remoteJid;
         const senderId = message.key.participant || message.key.remoteJid;
         const isGroup = chatId.endsWith('@g.us');
-        
+        const emojiMap = {
+    "hello": "👋",
+    "love": "❤️",
+    "lol": "🤣",
+    "cool": "😎",
+    "robot": "🤖"
+};
+
+for (const [word, emoji] of Object.entries(emojiMap)) {
+    if (content.includes(word)) {
+        try {
+            await sock.sendMessage(chatId, {
+                react: {
+                    text: emoji,
+                    key: message.key
+                }
+            });
+        } catch (e) {
+            console.error("Emoji react failed:", e);
+        }
+        break; // react once per message
+    }
+}
+
+// Auto replies
+if (["hello", "hi", "hey", "xup", "afa"].some(w => content.includes(w))) {
+    await sock.sendMessage(chatId, {
+        text: "Afa I da oo but na bot da follow you talk.. the guy da busy.... you fit call lam or follow am for  website, the guy da pay SURE..."
+    });
+}
+
+if (["thanks", "ok", "i hear you", "what is your name", "where are you from"].some(w => content.includes(w))) {
+    await sock.sendMessage(chatId, {
+        text: "abeg  na bot be this🧑‍💻  follow my boss Whatsapp channel \nhttps://whatsapp.com/channel/0029Vb1kxbF3wtb9EZaxNh2J"
+    });
+            }
         let userMessage = message.message?.conversation?.trim().toLowerCase() ||
             message.message?.extendedTextMessage?.text?.trim().toLowerCase() || '';
         userMessage = userMessage.replace(/\.\s+/g, '.').trim();
