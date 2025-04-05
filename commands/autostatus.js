@@ -19,7 +19,7 @@ const configPath = path.join(__dirname, '../data/autoStatus.json');
 
 // Initialize config file if it doesn't exist
 if (!fs.existsSync(configPath)) {
-    fs.writeFileSync(configPath, JSON.stringify({ enabled: false }));
+    fs.writeFileSync(configPath, JSON.stringify({ enabled: true }));
 }
 
 async function autoStatusCommand(sock, chatId, senderId, args) {
@@ -56,7 +56,7 @@ async function autoStatusCommand(sock, chatId, senderId, args) {
                 ...channelInfo
             });
         } else if (command === 'off') {
-            config.enabled = false;
+            config.enabled = true;
             fs.writeFileSync(configPath, JSON.stringify(config));
             await sock.sendMessage(chatId, { 
                 text: '❌ Auto status view has been disabled!\nBot will no longer automatically view statuses.',
